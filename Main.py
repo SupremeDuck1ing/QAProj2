@@ -1,111 +1,55 @@
-from __future__ import print_function, unicode_literals
-import regex
+# MSU Software Q&A Spring 2022
+# Assignment 2
+# Cody Armand, cra252 
+# 3/9/2022 
 
-from pprint import pprint
-from PyInquirer import style_from_dict, Token, prompt
-from PyInquirer import Validator, ValidationError
+#Collect and store user input for height and weight
+def BmiInput():
+    global heightFT
+    global heightIN 
+    global weight 
 
+    heightFT = input("Enter Height in feet: ")
+    heightIN = input("Enter Height in inches: ")  
+    weight = input("Enter weight in pounds: ")  
 
-style = style_from_dict({
-    Token.QuestionMark: '#E91E63 bold',
-    Token.Selected: '#673AB7 bold',
-    Token.Instruction: '',  # default
-    Token.Answer: '#2196f3 bold',
-    Token.Question: '',
-})
+#If user input isn't numerical, print error message and ask for input again
+def DataValid(): 
+    isValid = False
 
-
-class PhoneNumberValidator(Validator):
-    def validate(self, document):
-        ok = regex.match('^([01]{1})?[-.\s]?\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4})\s?((?:#|ext\.?\s?|x\.?\s?){1}(?:\d+)?)?$', document.text)
-        if not ok:
-            raise ValidationError(
-                message='Please enter a valid phone number',
-                cursor_position=len(document.text))  # Move cursor to end
-
-
-class NumberValidator(Validator):
-    def validate(self, document):
-        try:
-            int(document.text)
-        except ValueError:
-            raise ValidationError(
-                message='Please enter a number',
-                cursor_position=len(document.text))  # Move cursor to end
+    while not isValid: 
+        if(heightFT.isdigit() == False): 
+            print("Invalid Input, Try Again")
+            BmiInput() 
+        elif(heightIN.isdigit() == False): 
+            print("Invalid Input, Try Again")
+            BmiInput()
+        elif(weight.isdigit() == False): 
+            print("Invalid Input, Try Again")
+            BmiInput() 
+        else: 
+            isValid = True
 
 
-print('Hi, welcome to Python Pizza')
+def Conversion(): 
+    global BMI 
 
-questions = [
-    {
-        'type': 'confirm',
-        'name': 'toBeDelivered',
-        'message': 'Is this for delivery?',
-        'default': False
-    },
-    {
-        'type': 'input',
-        'name': 'phone',
-        'message': 'What\'s your phone number?',
-        'validate': PhoneNumberValidator
-    },
-    {
-        'type': 'list',
-        'name': 'size',
-        'message': 'What size do you need?',
-        'choices': ['Large', 'Medium', 'Small'],
-        'filter': lambda val: val.lower()
-    },
-    {
-        'type': 'input',
-        'name': 'quantity',
-        'message': 'How many do you need?',
-        'validate': NumberValidator,
-        'filter': lambda val: int(val)
-    },
-    {
-        'type': 'expand',
-        'name': 'toppings',
-        'message': 'What about the toppings?',
-        'choices': [
-            {
-                'key': 'p',
-                'name': 'Pepperoni and cheese',
-                'value': 'PepperoniCheese'
-            },
-            {
-                'key': 'a',
-                'name': 'All dressed',
-                'value': 'alldressed'
-            },
-            {
-                'key': 'w',
-                'name': 'Hawaiian',
-                'value': 'hawaiian'
-            }
-        ]
-    },
-    {
-        'type': 'rawlist',
-        'name': 'beverage',
-        'message': 'You also get a free 2L beverage',
-        'choices': ['Pepsi', '7up', 'Coke']
-    },
-    {
-        'type': 'input',
-        'name': 'comments',
-        'message': 'Any comments on your purchase experience?',
-        'default': 'Nope, all good!'
-    },
-    {
-        'type': 'list',
-        'name': 'prize',
-        'message': 'For leaving a comment, you get a freebie',
-        'choices': ['cake', 'fries'],
-        'when': lambda answers: answers['comments'] != 'Nope, all good!'
-    }
-]
+    BMI = round((int(weight) * 0.45) / (((int(heightFT) * 12) + int(heightIN)) * 0.025)**2, 1)  
 
-answers = prompt(questions, style=style)
-print('Order receipt:')
-pprint(answers)
+def Output():  
+    print("The BMI for a person who is " + str(heightFT) + "ft. " + str(heightIN) + "in. and weighs " + str(weight) + " is " + str(BMI)) 
+
+    if(BMI < 18.5): 
+        print("Underweight") 
+    elif(18.5 <= BMI < 25): 
+        print("Normal Weight") 
+    elif(25 <= BMI < 30):
+        print("Overweight") 
+    else: 
+        print("Obese")
+
+
+BmiInput() 
+DataValid() 
+Conversion()
+Output()
