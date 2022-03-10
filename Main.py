@@ -37,7 +37,7 @@ def Conversion():
     BMI = round((int(weight) * 0.45) / (((int(heightFT) * 12) + int(heightIN)) * 0.025)**2, 1)  
 
 def Output():  
-    print("The BMI for a person who is " + str(heightFT) + "ft. " + str(heightIN) + "in. and weighs " + str(weight) + " is " + str(BMI)) 
+    print("The BMI for a person who is " + str(heightFT) + "ft. " + str(heightIN) + "in. and weighs " + str(weight) + " pounds is " + str(BMI)) 
 
     if(BMI < 18.5): 
         print("Underweight") 
